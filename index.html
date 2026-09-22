@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  Ponte entre o Teams e a App AT (distribuicao/COMO_DISTRIBUIR.md, "Ligacoes do Teams").
+  O Teams so abre ligacoes https; esta pagina recebe ?abrir=aviso/CODIGO e passa-a ao
+  Windows como appat://aviso/CODIGO, que abre a app (partilhado/ligacoes_app.py).
+  Publica e sem dados: so reencaminha. Aceita apenas as accoes que a app conhece.
+-->
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>App AT</title>
+<style>
+  :root { --fundo: #f5f7fa; --cartao: #fff; --texto: #1f2d3d; --apagado: #6b7785; --azul: #2e86c1; --borda: #e3e8ee; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fundo: #15191e; --cartao: #1e242b; --texto: #e6ebf0; --apagado: #97a3b0; --azul: #5dade2; --borda: #2c343d; }
+  }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--fundo);
+         color: var(--texto); font: 15px/1.5 "Segoe UI", system-ui, sans-serif; }
+  main { background: var(--cartao); border: 1px solid var(--borda); border-radius: 10px;
+         padding: 28px 32px; margin: 16px; max-width: 420px; text-align: center; }
+  h1 { font-size: 20px; margin: 0 0 8px; }
+  p { margin: 8px 0; color: var(--apagado); }
+  a.botao { display: inline-block; margin: 14px 0 6px; padding: 9px 18px; border-radius: 6px;
+            border: 1px solid var(--borda); color: var(--azul); font-weight: 600; text-decoration: none; }
+  a.botao:hover { border-color: var(--azul); }
+</style>
+</head>
+<body>
+<main>
+  <h1>📂 A abrir a App AT…</h1>
+  <p>Se o navegador perguntar, escolha <b>Abrir</b> e marque <b>Permitir sempre</b>: da próxima vez abre direto.</p>
+  <a class="botao" id="abrir" href="appat://avisos">Abrir a App AT</a>
+  <p>Não aconteceu nada? A App AT não está instalada neste computador: fale com quem gere a app.</p>
+  <p>Pode fechar este separador.</p>
+</main>
+<script>
+  // So as accoes que a app atende; o resto abre so os Avisos (nunca se reencaminha para outro sitio)
+  var pedido = new URLSearchParams(location.search).get("abrir") || "avisos";
+  var valido = /^(avisos|aviso\/[^\s"'<>\]+|pdf\/[^\s"'<>\]+)$/.test(pedido);
+  var destino = "appat://" + (valido ? pedido : "avisos");
+  document.getElementById("abrir").href = destino;
+  location.href = destino;
+</script>
+</body>
+</html>

@@ -38,9 +38,20 @@
 <script>
   // So as accoes que a app atende; o resto abre so os Avisos (nunca se reencaminha para outro sitio)
   var pedido = new URLSearchParams(location.search).get("abrir") || "avisos";
-  var valido = /^(avisos|aviso\/[^\s"'<>\]+|pdf\/[^\s"'<>\]+)$/.test(pedido);
+  var valido = /^(avisos|(aviso|pdf)\/[^\s"'<>]+)$/.test(pedido);
   var destino = "appat://" + (valido ? pedido : "avisos");
   document.getElementById("abrir").href = destino;
+
+  // O separador fecha-se sozinho quando a app abre e tapa o navegador (a pagina fica
+  // escondida). Nao pela perda de foco: a pergunta "Abrir App AT?" tambem o tira, e o
+  // separador fechava-se com a pergunta por responder. Os navegadores so deixam fechar
+  // um separador que so tem esta pagina no historico - o caso de quem chega do Teams.
+  // Se a app nao abrir, a pagina nunca se esconde e fica a mensagem de ajuda.
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") {
+      setTimeout(function () { window.close(); }, 500);
+    }
+  });
   location.href = destino;
 </script>
 </body>

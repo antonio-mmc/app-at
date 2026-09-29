@@ -38,7 +38,7 @@
 <script>
   // So as accoes que a app atende; o resto abre so os Avisos (nunca se reencaminha para outro sitio)
   var pedido = new URLSearchParams(location.search).get("abrir") || "avisos";
-  var valido = /^(avisos|(aviso|pdf)\/[^\s"'<>]+)$/.test(pedido);
+  var valido = /^(avisos|mensagens|(aviso|pdf)\/[^\s"'<>]+)$/.test(pedido);
   var destino = "appat://" + (valido ? pedido : "avisos");
   document.getElementById("abrir").href = destino;
 
